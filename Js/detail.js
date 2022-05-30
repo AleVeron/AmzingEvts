@@ -1,6 +1,30 @@
-let dataInfo = data.eventos;
+//Declaro una variable con la informacion de data.eventos
+let dataInfo;
+let fechaActual;
+let getData;
 
-function getData() {//la funcion getData es la encargada de recolectar el dato de nuestro archivo json, esta declarada asincrona (async), para poder determinarle el metodo await
+/* ------------------------------------------------------------------------------------------------------------------------------------------ */
+
+async function getDataInfo(){
+  await fetch("https://amazing-events.herokuapp.com/api/events")
+  .then(response => response.json())
+  .then(json => getData = json)
+
+
+  fechaActual = getData.currentDate;
+  dataInfo = getData.events;
+
+
+  return[fechaActual, dataInfo]
+}
+getData = await getDataInfo()
+
+
+fechaActual = getData[0]
+dataInfo = getData[1]
+
+
+function getDataCard() {//la funcion getData es la encargada de recolectar el dato de nuestro archivo json, esta declarada asincrona (async), para poder determinarle el metodo await
     var idEvent = 1
     dataInfo.map(e =>e.id = idEvent++)
     var id = location.search.split("?id=").filter(Number)
@@ -22,7 +46,7 @@ function getData() {//la funcion getData es la encargada de recolectar el dato d
       <div class="col-md-6 p-2 d-flex align-items-center justify-content-center">
         <div class="card-body cardDos d-flex justify-content-center align-items-center flex-column">
           <h5 class="card-title">${event.name}</h5>
-          <p class="card-text d-flex aling-text-center">Description: ${event.description}</p>
+          <p class="card-text d-flex text-center">Description: ${event.description}</p>
           <p class="card-text">Capacity: ${event.capacity}</p>
           <p class="card-text">Place: ${event.place}</p>
           <p class="card-text">Price: U$D ${event.price}</p>
@@ -34,4 +58,4 @@ function getData() {//la funcion getData es la encargada de recolectar el dato d
     document.querySelector('#bigCard').innerHTML = templateHtml
 }
 
-getData()//Inicializo getData
+getDataCard()//Inicializo getData

@@ -2,10 +2,36 @@
 let index = document.getElementById("articlesIndex");
 
 //Declaro una variable con la informacion de data.eventos
-let dataInfo = data.eventos;
+let dataInfo;
+let fechaActual;
+let getData;
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------ */
 
+async function getDataInfo(){
+  await fetch("https://amazing-events.herokuapp.com/api/events")
+  .then(response => response.json())
+  .then(json => getData = json)
+
+  console.log(getData)
+  fechaActual = getData.currentDate;
+  dataInfo = getData.events;
+
+  console.log(fechaActual);
+  console.log(dataInfo);
+
+  return[fechaActual, dataInfo]
+}
+getData = await getDataInfo()
+console.log(getData);
+
+fechaActual = getData[0]
+dataInfo = getData[1]
+console.log(fechaActual);
+console.log(dataInfo);
+
+
+//Mostrar checkbox
 function showCheckbox() {
   //Guardo en variable el contenedor de categorias
   let categories = document.getElementById("categories");
@@ -30,6 +56,7 @@ function showCheckbox() {
 
 showCheckbox();
 
+//Filtrado de checkbox
 
 var clickCheckbox = []
 var textSearch = ""
@@ -74,6 +101,8 @@ function filterArray() {
 }
 filterArray()
 
+//Mostrar cartas
+
 function showCards(data) {
 
   var templateHtml = ""
@@ -81,7 +110,6 @@ function showCards(data) {
   for (var i = 0; i < data.length; i++) {
     var id = 1
     dataInfo.map(e => e.id = id++)
-    console.log(dataInfo)
     let e = data[i];
     templateHtml += `
       <div class="col d-flex justify-content-center">
@@ -102,5 +130,9 @@ function showCards(data) {
     </div>    
       `
   }
+  if (templateHtml === ""){
+    templateHtml += `<img class="container" style="width:55%" src="https://cdn-icons-png.flaticon.com/512/6178/6178994.png"/>`
+  }
   document.querySelector('#articlesIndex').innerHTML = templateHtml;
 }
+

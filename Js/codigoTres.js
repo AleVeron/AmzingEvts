@@ -2,11 +2,29 @@
 let upcomingEvents = document.getElementById("articlesFuture");
 
 //Declaro una variable con la informacion de data.eventos
-let dataInfo = data.eventos;
+let dataInfo;
+let fechaActual;
+let getData;
 
-//Declaro fecha actual
-let fechaActual = data.fechaActual;
-console.log(fechaActual);
+/* ------------------------------------------------------------------------------------------------------------------------------------------ */
+
+async function getDataInfo(){
+  await fetch("https://amazing-events.herokuapp.com/api/events")
+  .then(response => response.json())
+  .then(json => getData = json)
+
+  fechaActual = getData.currentDate;
+  dataInfo = getData.events;
+
+
+  return[fechaActual, dataInfo]
+}
+getData = await getDataInfo()
+
+
+fechaActual = getData[0]
+dataInfo = getData[1]
+
 
 
 function showCheckbox() {
@@ -83,7 +101,7 @@ function showCards(data) {
 
   //Vacio el contenedor padre
   upcomingEvents.innerHTML="";
-  
+  if(data.length !== 0){
   data.forEach(e => {
     console.log(e.date);
     if (fechaActual < e.date) //Comparo la fecha actual con la fecha y si es mayor a la del envento imprimo
@@ -98,7 +116,7 @@ function showCards(data) {
       cardsEventos.innerHTML = `
     
     <div class="card" >
-      <img src=${e.image} class="card-img-top" alt="img">
+      <img src=${e.image} style="height: 215px;" class="card-img-top" alt="img" >
       <div class="card-body ">
         <h5 class="card-title d-flex justify-content-center">${e.name}</h5>
         <p class="card-text d-flex justify-content-center">${e.description}</p>
@@ -112,10 +130,16 @@ function showCards(data) {
       </div>
     </div>
   
-    `
+    ` 
+  
       //Imprimo en articlesPast el cardsEventos
       upcomingEvents.appendChild(cardsEventos)
     }
   })
+} else {
+  let cardsEventos = document.createElement('div');
+  cardsEventos.classList.add("col", "d-flex", "justify-content-center");
+  cardsEventos.innerHTML = `<img class="container" style="width:55%" src="https://cdn-icons-png.flaticon.com/512/6178/6178994.png"/>`
+  upcomingEvents.appendChild(cardsEventos)
 }
-
+}

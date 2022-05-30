@@ -104,6 +104,9 @@ footer{
 thead{
     background-color: gray;
 }
+td{
+    width: 100rem !important; 
+}
 
 /* Form */
 form{
